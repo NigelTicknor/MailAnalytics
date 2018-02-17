@@ -1,0 +1,14 @@
+{
+  "name": "MailReadChecker",
+  "version": "0.0.1",
+  "description": "MailReadChecker",
+  "author": "Nigel Ticknor",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mariasql": "^0.2.6",
+    "md5": "^2.2.1",
+    "nodemailer": "^4.4.1",
+    "request": "^2.83.0",
+    "text2png": "^1.0.1"
+  }
+}

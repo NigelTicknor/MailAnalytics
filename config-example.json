@@ -1,0 +1,25 @@
+{
+  "PORT":"5016",
+  "serverURL":"https://www.yourserver.com:5016/",
+  "sslConfig":{
+	  "privkey": "/path/to/privkey.pem",
+	  "cert": "/path/to/cert.pem"
+  },
+  "transportConfig":{
+    "host": "smtp.yourserver.com",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "username",
+      "pass": "password"
+    }
+  },
+  "sqlConfig":{
+    "host": "sql.yourserver.com",
+    "user": "username",
+    "password": "password",
+    "db": "mailchecker"
+  },
+  "sender":"\"Your Name\" <you@yourserver.com>",
+  "notifURL":"https://www.yourserver.com/notifEndpoint"
+}
