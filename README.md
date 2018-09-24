@@ -1,5 +1,5 @@
 # MailReadChecker
-A server that will track the reading of emails that you send.
+This is a proof of concept server to track the reading of emails that you send using NodeJS.
 
 
 Before you run this, set up your database by running mailchecker.sql file, then copy config-example.json to config.json and change the values to your own.
