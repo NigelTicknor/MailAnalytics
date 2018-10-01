@@ -1,4 +1,4 @@
-# MailReadChecker
+# MailAnalytics
 This is a proof of concept server to track the reading of emails that you send using NodeJS.
 
 
