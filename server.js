@@ -21,10 +21,7 @@ var globalconf = require('./config.json');
 
 //globals
 var app = express();
-var https = require('https').createServer({
-  key: fs.readFileSync(globalconf.sslConfig.privkey),
-  cert: fs.readFileSync(globalconf.sslConfig.cert)
-},app);
+var server = globalconf.ssl ? require('https').createServer({key: fs.readFileSync(globalconf.sslConfig.privkey), cert: fs.readFileSync(globalconf.sslConfig.cert)},app) : require('http').Server(app);
 var sql = new Maria(globalconf.sqlConfig);
 let transporter = nodemailer.createTransport(globalconf.transportConfig);
 var PORT = process.env.port || globalconf.PORT;
@@ -155,6 +152,6 @@ function sendPost(data){
 }
 
 //actually start the server
-https.listen(PORT,function(){
+server.listen(PORT,function(){
  console.log('listening on *:'+PORT);
 });
