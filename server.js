@@ -60,7 +60,7 @@ app.get('/email/:id/:usr',function(req,res){
 				if(rows[0].info.numRows>0)
 					cnt = rows[0][0].count;
 				console.log('hit ('+cnt+') for '+req.params.id+' '+req.params.usr);
-				res.send(text2png(cnt,{font:'200px sans-serif'}));
+				res.send(text2png(cnt, getImageOptions(req.query)));
 				sql.query("CALL getEmailFromMD5('"+req.params.usr+"');",function(err,rows){
 				if(!err&&rows[0][0]&&cnt==1) //so you don't get spammed
 					//an example of something to do with the data; in regular use-case, the SQL update is probably enough
@@ -111,13 +111,13 @@ app.get('/count/:id/:usr',function(req,res){
 		if (err){
 			console.log(err);
 			console.log('check (error) for '+req.params.id+' '+req.params.usr);
-			res.send(text2png('error',{font:'200px sans-serif'}));
+			res.send(text2png('error', getImageOptions(req.query)));
 		}
 		else{
 			var cnt = '0';
 			if(rows[0].info.numRows>0)
 				cnt = rows[0][0].count;
-			res.send(text2png(cnt,{font:'200px sans-serif'}));
+			res.send(text2png(cnt, getImageOptions(req.query)));
 		}
 	});
 });
@@ -149,6 +149,13 @@ function getEmailMD5(email){
 //sends me a notification
 function sendPost(data){
 	request.post(globalconf.notifURL, {form:{title:'Mail '+data.mid+' read',body:'Mail: '+data.mid+'\nUser: '+data.user+'\nMD5: '+data.md5+'\nCount: '+data.count}})
+}
+
+function getImageOptions(opts){
+	return {
+		font: '200px sans-serif',
+		color: opts.color ? '#' + opts.color : '#000'
+	};
 }
 
 //actually start the server
