@@ -7,7 +7,7 @@
     "express": "^4.16.2",
     "mariasql": "^0.2.6",
     "md5": "^2.2.1",
-    "nodemailer": "^4.4.1",
+    "nodemailer": "^6.4.16",
     "request": "^2.83.0",
     "text2png": "^2.3.0"
   }
