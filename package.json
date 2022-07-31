@@ -5,10 +5,10 @@
   "author": "Nigel Ticknor",
   "dependencies": {
     "express": "^4.16.2",
-    "mariasql": "^0.2.6",
+    "mariadb": "^3.0.0",
     "md5": "^2.2.1",
     "nodemailer": "^4.4.1",
     "request": "^2.83.0",
-    "text2png": "^2.3.0"
+    "text-to-image": "^5.2.0"
   }
 }

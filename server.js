@@ -11,8 +11,10 @@
 //imports
 var express = require('express');
 var nodemailer = require('nodemailer'); //you don't need this if you will send your emails externally
-var text2png = require('text2png'); //you don't need this if you will only use the invisible image
-var Maria = require('mariasql'); //swap for your DB tech, but should work with MySQL
+// var text2png = require('text2png'); //you don't need this if you will only use the invisible image
+// var Maria = require('mariasql'); //swap for your DB tech, but should work with MySQL
+const textToImage = require('text-to-image');
+const mariadb = require('mariadb/callback');
 var md5 = require('md5');
 var fs = require('fs');
 var request = require('request'); //you don't need this if you remove the notification sending
@@ -22,7 +24,9 @@ var globalconf = require('./config.json');
 //globals
 var app = express();
 var server = globalconf.ssl ? require('https').createServer({key: fs.readFileSync(globalconf.sslConfig.privkey), cert: fs.readFileSync(globalconf.sslConfig.cert)},app) : require('http').Server(app);
-var sql = new Maria(globalconf.sqlConfig);
+// var sql = new Maria(globalconf.sqlConfig);
+var sql = mariadb.createConnection(globalconf.sqlConfig);
+
 let transporter = nodemailer.createTransport(globalconf.transportConfig);
 var PORT = process.env.port || globalconf.PORT;
 
@@ -57,10 +61,20 @@ app.get('/email/:id/:usr',function(req,res){
 			}
 			else{
 				var cnt = '0';
-				if(rows[0].info.numRows>0)
+				console.log(rows.length > 0);
+				if(rows[0][0].count)
 					cnt = rows[0][0].count;
 				console.log('hit ('+cnt+') for '+req.params.id+' '+req.params.usr);
-				res.send(text2png(cnt, getImageOptions(req.query)));
+				let imgtxt = text2png(''+cnt, getImageOptions(req.query));
+				const im = imgtxt.replace('data:image/png;base64,','');
+				const img = Buffer.from(im, 'base64');
+				// console.log(img);
+				res.writeHead(200, {
+					 'Content-Type': 'image/png',
+					 'Content-Length': img.length
+				   });
+			    res.end(img); 				
+				// res.send(text2png('464', getImageOptions(req.query)));
 				sql.query("CALL getEmailFromMD5('"+req.params.usr+"');",function(err,rows){
 				if(!err&&rows[0][0]&&cnt==1) //so you don't get spammed
 					//an example of something to do with the data; in regular use-case, the SQL update is probably enough
@@ -89,7 +103,7 @@ app.get('/secret/:id/:usr',function(req,res){
 			}
 			else{
 				var cnt = '0';
-				if(rows[0].info.numRows>0)
+				if(rows.length>0)
 					cnt = rows[0][0].count;
 				console.log('hit ('+cnt+') for '+req.params.id+' '+req.params.usr);
 				res.sendFile(__dirname+'/invisible.png');
@@ -115,7 +129,7 @@ app.get('/count/:id/:usr',function(req,res){
 		}
 		else{
 			var cnt = '0';
-			if(rows[0].info.numRows>0)
+			if(rows.length>0)
 				cnt = rows[0][0].count;
 			res.send(text2png(cnt, getImageOptions(req.query)));
 		}
@@ -140,6 +154,9 @@ app.get('/send/:id/:to',function(req,res){
 	});
 });
 
+function text2png(txt, opts) {
+	return textToImage.generateSync(txt, opts);
+}
 
 //MD5's an email in lowercase
 function getEmailMD5(email){
@@ -153,8 +170,13 @@ function sendPost(data){
 
 function getImageOptions(opts){
 	return {
-		font: '200px sans-serif',
-		color: opts.color ? '#' + opts.color : '#000'
+		fontSize: 200,
+		fontFamily: 'sans-serif',
+		textColor: opts.color ? '#' + opts.color : '#000',
+		margin: 0,
+		bgColor: '#00000000',
+		textAlign: 'center',
+		verticalAlign: 'center'
 	};
 }
 
