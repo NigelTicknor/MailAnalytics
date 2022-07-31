@@ -7,7 +7,7 @@
     "express": "^4.16.2",
     "mariadb": "^3.0.0",
     "md5": "^2.2.1",
-    "nodemailer": "^4.4.1",
+    "nodemailer": "^6.6.1",
     "request": "^2.83.0",
     "text-to-image": "^5.2.0"
   }
