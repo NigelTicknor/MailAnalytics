@@ -31,6 +31,15 @@ let transporter = nodemailer.createTransport(globalconf.transportConfig);
 var PORT = process.env.port || globalconf.PORT;
 
 
+sql.connect(err => {
+  if (err) {
+    console.log("not connected due to error: " + err);
+  } else {
+    console.log("connected ! connection id is " + conn.threadId);
+  }
+});
+
+
 //Express Routes
 app.get('/',function(req,res){
 	res.send('You\'ve reached the testing server for my mail read checker.');
