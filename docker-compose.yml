@@ -2,6 +2,8 @@ version: '3'
 
 services:
   node:
+    container_name: mailanalytics
     build: '.'
     ports:
       - 3016:3016
+    restart: always
